@@ -25,11 +25,20 @@ function die() {
 	exit 1
 }
 
+# Create and/or reset permissions on the ~/.dupro directory.
+USER_PROFILE_DIR="$HOME/.dupro"
+if [ ! -e "$USER_PROFILE_DIR" ]; then
+	mkdir "$USER_PROFILE_DIR"
+fi
+chmod 700 "$USER_PROFILE_DIR"
+
+# Check if we have enough arguments to run.
 if [ "$#" -lt 2 ]; then
 	show_usage
 	die "Not enough arguments."
 fi
 
+# Get arguments and options.
 PROFILE="$1"; shift;
 COMMAND="$1"; shift;
 # A couple commands take an extra argument.
@@ -50,7 +59,7 @@ DUPLICITY_BACKUP_OPTIONS=""
 # Read the profile.
 #
 
-PROFILE_PATH="$HOME/.dupro/$PROFILE"
+PROFILE_PATH="$USER_PROFILE_DIR/$PROFILE"
 if [ ! -f "$PROFILE_PATH" ]; then
 	die "No such profile: $PROFILE_PATH"
 fi
