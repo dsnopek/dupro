@@ -54,6 +54,29 @@ export PASSPHRASE="xxx"
 
 You just create the profile in your text editor - that's it!
 
+Command differences from Duplicity
+----------------------------------
+
+For consistency and simplicity, there are a number of minor differences in
+how commands must be given versus how they are in Duplicity.
+
+First of all, a command name is always required. When running Duplicity
+directly, you can omit the command when backing up or restoring and the actual
+operation is determined by whether you gave the source or target first.
+
+Since you don't give the source or target on the command line (and it'd be
+quite complicated for a simple shell script to tell the difference between the
+source and target) you must always explicity give a command.
+
+Second, Duply requires all the arguments first, and then all the options.
+Duplicity documents its commands as taking the command, maybe an argument
+to that command, the options, and then the source and/or target arguments.
+But then in practice, it'll actually accept quite a few different orderings
+of command, arguments and options, but not all.
+
+For simplicity, because this is a dumb shell script without any sophisticated
+command line parsing, we just mandate that it must be arguments then options.
+
 Comparisons to other tools
 --------------------------
 
