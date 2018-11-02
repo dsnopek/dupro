@@ -101,7 +101,7 @@ case $COMMAND in
 		;;
 
 	verify)
-		exec duplicity verify $DUPLICITY_OPTIONS $EXTRA_OPTIONS $SOURCE $TARGET
+		exec duplicity verify $DUPLICITY_OPTIONS $EXTRA_OPTIONS $TARGET $SOURCE
 		;;
 
 	restore)
