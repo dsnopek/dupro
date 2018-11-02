@@ -7,11 +7,16 @@ function show_usage() {
 	echo 
 	echo "  dupro <profile> <command> [options]"
 	echo "  dupro <profile> restore <directory> [options]"
+	echo "  dupro <profile> remove-older-than <time> [options]"
+	echo "  dupro <profile> remove-all-but-n-full <count> [options]"
+	echo "  dupro <profile> remove-all-inc-of-but-n-full <count> [options]"
 	echo
 	echo "EXAMPLE:"
 	echo 
 	echo "  dupro myprofile full"
+	echo "  dupro myprofile incremental --full-if-older-than 30D"
 	echo "  dupro myprofile restore /where/to/restore/to"
+	echo "  dupro myprofile remove-older-than 30D"
 	echo
 }
 
@@ -25,11 +30,14 @@ if [ "$#" -lt 2 ]; then
 	die "Not enough arguments."
 fi
 
-PROFILE=$1; shift;
-COMMAND=$1; shift;
-if [ "$COMMAND" = restore ]; then
-	RESTORE_TARGET=$1; shift;
-fi
+PROFILE="$1"; shift;
+COMMAND="$1"; shift;
+# A couple commands take an extra argument.
+case $COMMAND in
+	restore|remove-*)
+		EXTRA_ARGUMENT="$1"; shift;
+		;;
+esac
 EXTRA_OPTIONS="$@"
 
 # Default config values.
@@ -61,22 +69,35 @@ fi
 #
 
 case $COMMAND in
-	full|backup)
-		exec duplicity $DUPLICITY_OPTIONS $DUPLICITY_BACKUP_OPTIONS $EXTRA_OPTIONS $COMMAND $SOURCE $TARGET
+	full|incremental)
+		exec duplicity $COMMAND $DUPLICITY_OPTIONS $DUPLICITY_BACKUP_OPTIONS $EXTRA_OPTIONS $SOURCE $TARGET
 		;;
-	
+
+	verify)
+		exec duplicity verify $DUPLICITY_OPTIONS $EXTRA_OPTIONS $SOURCE $TARGET
+		;;
+
 	restore)
 		# Validate the restore target.
-		if [ -z "$RESTORE_TARGET" -o "${RESTORE_TARGET:0:2}" = '--' ]; then
+		if [ -z "$EXTRA_ARGUMENT" -o "${EXTRA_ARGUMENT:0:2}" = '--' ]; then
 			show_usage
 			die "When restoring, the 3rd argument must be the target directory to restore files to."
 		fi
 
-		exec duplicity $DUPLICITY_OPTIONS $EXTRA_OPTIONS restore $TARGET $RESTORE_TARGET
+		exec duplicity restore $DUPLICITY_OPTIONS $EXTRA_OPTIONS $TARGET $EXTRA_ARGUMENT
 		;;
-	
+
+	remove-*)
+		if [ -z "$EXTRA_ARGUMENT" -o "${EXTRA_ARGUMENT:0:2}" = '--' ]; then
+			show_usage
+			die "When removing, the 3rd argument must be a time or a count."
+		fi
+
+		exec duplicity $COMMAND $EXTRA_ARGUMENT $DUPLICITY_OPTIONS $EXTRA_OPTIONS $TARGET
+		;;
+
 	*)
-		exec duplicity $DUPLICITY_OPTIONS $EXTRA_OPTIONS $COMMAND $TARGET
+		exec duplicity $COMMAND $DUPLICITY_OPTIONS $EXTRA_OPTIONS $TARGET
 		;;
 esac
 
