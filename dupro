@@ -96,7 +96,7 @@ fi
 #
 
 case $COMMAND in
-	full|incremental)
+	full|incr|incremental)
 		exec duplicity $COMMAND $DUPLICITY_OPTIONS $DUPLICITY_BACKUP_OPTIONS $EXTRA_OPTIONS $SOURCE $TARGET
 		;;
 
