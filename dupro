@@ -1,0 +1,82 @@
+#!/bin/bash
+
+function show_usage() {
+	echo "Dupro - Duplicity Profile"
+	echo
+	echo "USAGE:"
+	echo 
+	echo "  dupro <profile> <command> [options]"
+	echo "  dupro <profile> restore <directory> [options]"
+	echo
+	echo "EXAMPLE:"
+	echo 
+	echo "  dupro myprofile full"
+	echo "  dupro myprofile restore /where/to/restore/to"
+	echo
+}
+
+function die() {
+	echo "ERROR: $@" > /dev/stderr
+	exit 1
+}
+
+if [ "$#" -lt 2 ]; then
+	show_usage
+	die "Not enough arguments."
+fi
+
+PROFILE=$1; shift;
+COMMAND=$1; shift;
+if [ "$COMMAND" = restore ]; then
+	RESTORE_TARGET=$1; shift;
+fi
+EXTRA_OPTIONS="$@"
+
+# Default config values.
+SOURCE=""
+TARGET=""
+DUPLICITY_OPTIONS=""
+DUPLICITY_BACKUP_OPTIONS=""
+
+#
+# Read the profile.
+#
+
+PROFILE_PATH="$HOME/.dupro/$PROFILE"
+if [ ! -f "$PROFILE_PATH" ]; then
+	die "No such profile: $PROFILE_PATH"
+fi
+. "$PROFILE_PATH"
+
+if [ -z "$SOURCE" ]; then
+	die "Profile doesn't set SOURCE variable"
+fi
+
+if [ -z "$TARGET" ]; then
+	die "Profile doesn't set TARGET variable"
+fi
+
+#
+# Run duplicity
+#
+
+case $COMMAND in
+	full|backup)
+		exec duplicity $DUPLICITY_OPTIONS $DUPLICITY_BACKUP_OPTIONS $EXTRA_OPTIONS $COMMAND $SOURCE $TARGET
+		;;
+	
+	restore)
+		# Validate the restore target.
+		if [ -z "$RESTORE_TARGET" -o "${RESTORE_TARGET:0:2}" = '--' ]; then
+			show_usage
+			die "When restoring, the 3rd argument must be the target directory to restore files to."
+		fi
+
+		exec duplicity $DUPLICITY_OPTIONS $EXTRA_OPTIONS restore $TARGET $RESTORE_TARGET
+		;;
+	
+	*)
+		exec duplicity $DUPLICITY_OPTIONS $EXTRA_OPTIONS $COMMAND $TARGET
+		;;
+esac
+

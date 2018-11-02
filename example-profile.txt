@@ -1,0 +1,14 @@
+SOURCE=/etc
+TARGET=s3://s3.amazonaws.com/myawesome-server-backup
+
+# These options are passed on every command.
+DUPLICITY_OPTIONS="--s3-use-new-style"
+
+# These options are only passed on backup commands.
+DUPLICITY_BACKUP_OPTIONS="--full-if-older-than 30D"
+
+# These get passed directly to Duplicity. Different targets and encryption
+# methods take different variables - please see the Duplicity docs.
+export AWS_ACCESS_KEY_ID="xxx"
+export AWS_SECRET_ACCESS_KEY="xxx"
+export PASSPHRASE="xxx"
