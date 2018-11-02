@@ -27,7 +27,7 @@ anything special from dupro - those are just plain duplicity commands. See
 Creating a profile
 ------------------
 
-Profiles live under `~/.dupro', for example, if your profile was called
+Profiles live under `~/.dupro`, for example, if your profile was called
 `myserverbackup`, it'd be a file called `~/.dupro/myserverbackup`.
 
 Profiles are just bash scripts that set some variables that Dupro uses,
