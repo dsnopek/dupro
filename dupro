@@ -108,12 +108,15 @@ case $COMMAND in
 		exec duplicity restore $DUPLICITY_OPTIONS $EXTRA_OPTIONS $TARGET $EXTRA_ARGUMENT
 		;;
 
-	remove-*)
+	remove-older-than|remove-all-but-n-full|remove-all-inc-of-but-n-full)
 		exec duplicity $COMMAND $EXTRA_ARGUMENT $DUPLICITY_OPTIONS $EXTRA_OPTIONS $TARGET
 		;;
 
-	*)
+	collection-status|list-current-files|cleanup)
 		exec duplicity $COMMAND $DUPLICITY_OPTIONS $EXTRA_OPTIONS $TARGET
 		;;
+
+	*)
+		die "Unknown command: $COMMAND"
 esac
 
