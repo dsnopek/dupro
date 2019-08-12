@@ -68,7 +68,7 @@ Since you don't give the source or target on the command line (and it'd be
 quite complicated for a simple shell script to tell the difference between the
 source and target) you must always explicity give a command.
 
-Second, Duply requires all the arguments first, and then all the options.
+Second, Dupro requires all the arguments first, and then all the options.
 Duplicity documents its commands as taking the command, maybe an argument
 to that command, the options, and then the source and/or target arguments.
 But then in practice, it'll actually accept quite a few different orderings
