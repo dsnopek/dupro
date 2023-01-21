@@ -4,7 +4,7 @@ function show_usage() {
 	echo "Dupro - Duplicity Profile"
 	echo
 	echo "USAGE:"
-	echo 
+	echo
 	echo "  dupro <profile> <command> [options]"
 	echo "  dupro <profile> restore <directory> [options]"
 	echo "  dupro <profile> remove-older-than <time> [options]"
@@ -12,7 +12,7 @@ function show_usage() {
 	echo "  dupro <profile> remove-all-inc-of-but-n-full <count> [options]"
 	echo
 	echo "EXAMPLE:"
-	echo 
+	echo
 	echo "  dupro myprofile full"
 	echo "  dupro myprofile incremental --full-if-older-than 30D"
 	echo "  dupro myprofile restore /where/to/restore/to"
@@ -97,23 +97,23 @@ fi
 
 case $COMMAND in
 	full|incr|incremental)
-		exec duplicity $COMMAND $DUPLICITY_OPTIONS $DUPLICITY_BACKUP_OPTIONS $EXTRA_OPTIONS $SOURCE $TARGET
+		exec duplicity $COMMAND $DUPLICITY_OPTIONS $DUPLICITY_BACKUP_OPTIONS "$EXTRA_OPTIONS" $SOURCE $TARGET
 		;;
 
 	verify)
-		exec duplicity verify $DUPLICITY_OPTIONS $EXTRA_OPTIONS $TARGET $SOURCE
+		exec duplicity verify $DUPLICITY_OPTIONS "$EXTRA_OPTIONS" $TARGET $SOURCE
 		;;
 
 	restore)
-		exec duplicity restore $DUPLICITY_OPTIONS $EXTRA_OPTIONS $TARGET $EXTRA_ARGUMENT
+		exec duplicity restore $DUPLICITY_OPTIONS "$EXTRA_OPTIONS" $TARGET $EXTRA_ARGUMENT
 		;;
 
 	remove-older-than|remove-all-but-n-full|remove-all-inc-of-but-n-full)
-		exec duplicity $COMMAND $EXTRA_ARGUMENT $DUPLICITY_OPTIONS $EXTRA_OPTIONS $TARGET
+		exec duplicity $COMMAND $EXTRA_ARGUMENT $DUPLICITY_OPTIONS "$EXTRA_OPTIONS" $TARGET
 		;;
 
 	collection-status|list-current-files|cleanup)
-		exec duplicity $COMMAND $DUPLICITY_OPTIONS $EXTRA_OPTIONS $TARGET
+		exec duplicity $COMMAND $DUPLICITY_OPTIONS "$EXTRA_OPTIONS" $TARGET
 		;;
 
 	*)
