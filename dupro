@@ -65,7 +65,6 @@ case $COMMAND in
 		fi
 		;;
 esac
-EXTRA_OPTIONS="$@"
 
 # Default config values.
 SOURCE=""
@@ -97,23 +96,23 @@ fi
 
 case $COMMAND in
 	full|incr|incremental)
-		exec duplicity $COMMAND $DUPLICITY_OPTIONS $DUPLICITY_BACKUP_OPTIONS "$EXTRA_OPTIONS" $SOURCE $TARGET
+		exec duplicity $COMMAND $DUPLICITY_OPTIONS $DUPLICITY_BACKUP_OPTIONS "$@" $SOURCE $TARGET
 		;;
 
 	verify)
-		exec duplicity verify $DUPLICITY_OPTIONS "$EXTRA_OPTIONS" $TARGET $SOURCE
+		exec duplicity verify $DUPLICITY_OPTIONS "$@" $TARGET $SOURCE
 		;;
 
 	restore)
-		exec duplicity restore $DUPLICITY_OPTIONS "$EXTRA_OPTIONS" $TARGET $EXTRA_ARGUMENT
+		exec duplicity restore $DUPLICITY_OPTIONS "$@" $TARGET $EXTRA_ARGUMENT
 		;;
 
 	remove-older-than|remove-all-but-n-full|remove-all-inc-of-but-n-full)
-		exec duplicity $COMMAND $EXTRA_ARGUMENT $DUPLICITY_OPTIONS "$EXTRA_OPTIONS" $TARGET
+		exec duplicity $COMMAND $EXTRA_ARGUMENT $DUPLICITY_OPTIONS "$@" $TARGET
 		;;
 
 	collection-status|list-current-files|cleanup)
-		exec duplicity $COMMAND $DUPLICITY_OPTIONS "$EXTRA_OPTIONS" $TARGET
+		exec duplicity $COMMAND $DUPLICITY_OPTIONS "$@" $TARGET
 		;;
 
 	*)
