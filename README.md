@@ -22,7 +22,7 @@ dupro myserverbackup remove-older-than 30D
 
 The sub-commands `full`, `collection-status` and `remove-older-than` aren't
 anything special from Dupro - those are just plain Duplicity commands. See
-[the Duplicity man page](http://duplicity.nongnu.org/duplicity.1.html).
+[the Duplicity man page](https://duplicity.gitlab.io/stable/duplicity.1.html).
 
 Creating a profile
 ------------------
